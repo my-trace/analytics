@@ -1,0 +1,10 @@
+# this command is for running docker locally
+
+docker run -p 8080:5000 --name mytrace\
+  --env FLASK_APP=trace/app.py \
+  --env APP_SETTINGS=trace.config.Production \
+  --env DB_URL=postgres://localhost/trace-dev \
+  --env APP_ID=364038477099861 \
+  --env APP_SECRET=e17b94dd981ece557bae550fc0a9a7cb \
+  --env APP_TOKEN="364038477099861|e17b94dd981ece557bae550fc0a9a7cb" \
+  mytrace

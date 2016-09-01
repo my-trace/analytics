@@ -1,0 +1,6 @@
+if [[ ! -d env ]]; then
+  virtualenv env
+fi
+
+echo VIRTUAL_ENV created. Activate with the following command:
+echo "\033[32msource env/bin/activate\033[0m"
