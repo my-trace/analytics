@@ -37,12 +37,12 @@ def users(account_id):
         return jsonify([account.to_dict() for account in accounts])
 
 @app.route('/points', methods=['GET', 'POST'])
-@fb_auth
-def points(account_id):
+def points():
     if req.method == 'POST':
         data = json.loads(req.data)
+        facebook_token = req.headers['Authorization']
         for point in data:
-            point['account_id'] = account_id
+            point['account_id'] = facebook_token
             db.session.add(Point(**point))
         db.session.commit()
         return Response('', status=201)
