@@ -20,17 +20,14 @@ $ source env/bin/activate
 $ foreman run install
 ```
 
-### Create migration folder
-```
-$ foreman run python manage.py db init
-```
-
 ### Run a migration
-Repeat this every time the models change.
+Run these commands to setup database or every time the models change.
 ```
 $ foreman run python manage.py db migrate
 $ foreman run python manage.py db upgrade
 ```
+
+The development database name is called **trace-dev**
 
 ## Development
 

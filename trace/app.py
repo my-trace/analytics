@@ -18,7 +18,7 @@ def health():
 
 @app.route('/users', methods=['GET', 'POST'])
 @fb_auth
-def users(account_id):
+def users(facebook_id):
     if req.method == 'POST':
         existing_account = Account.query.filter_by(id=account_id).first()
         if existing_account:
@@ -26,7 +26,7 @@ def users(account_id):
             res.status_code = 400
             return res
         data = json.loads(req.data)
-        new_account = Account(id=account_id, name=data['name'], email=data['email'])
+        new_account = Account(facebook_id=facebook_id, name=data['name'], email=data['email'])
         db.session.add(new_account)
         db.session.commit()
         res = jsonify(new_account.to_dict())

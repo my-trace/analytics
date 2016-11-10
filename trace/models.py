@@ -7,18 +7,18 @@ from datetime import datetime
 class Account(db.Model):
     __tablename__ = 'accounts'
 
-    id = db.Column(db.BigInteger, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255))
     email = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(timezone=True)) 
+    created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow) 
+    facebook_id = db.Column(db.BigInteger)
 
     points = relationship('Point', cascade="delete")
 
-    def __init__(self, id, name, email):
-        self.id = id
+    def __init__(self, facebook_id, name, email):
         self.name = name
         self.email = email
-        self.created_at = datetime.utcnow()
+        self.facebook_id = facebook_id
 
     def __repr__(self):
         return '<Account email=(%s)>' % self.email
@@ -42,7 +42,7 @@ class Point(db.Model):
 
     account = relationship('Account')
 
-    def __init__(self, id, lat, lng, account_id, **props):
+    def __init__(self, uuid, longitude, latitude, account_id, **props):
         self.id = uuid
         self.lat = longitude
         self.lng = latitude
