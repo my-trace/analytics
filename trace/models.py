@@ -43,18 +43,18 @@ class Point(db.Model):
     account = relationship('Account')
 
     def __init__(self, id, lat, lng, account_id, **props):
-        self.id = id
-        self.lat = lat
-        self.lng = lng
+        self.id = uuid
+        self.lat = longitude
+        self.lng = latitude
         self.account_id = account_id
         
-        created_at = props.get('created_at')
+        created_at = props.get('timestamp')
         self.created_at = datetime.fromtimestamp(created_at / 1000.0) if created_at else datetime.utcnow()
         
-        self.alt = props.get('alt')
-        self.floor_level = props.get('floor_level')
-        self.vertical_accuracy = props.get('vertical_accuracy')
-        self.horizontal_accuracy = props.get('horizontal_accuracy')
+        self.alt = props.get('altitude')
+        self.floor_level = props.get('floorLevel')
+        self.vertical_accuracy = props.get('verticalAccuracy')
+        self.horizontal_accuracy = props.get('horizontalAccuracy')
     
     def __repr__(self):
         return '<Point lat=(%s) lng=(%s)>' % (self.lat, self.lng)
