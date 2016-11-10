@@ -92,6 +92,25 @@ headers:
 body: json-array of the attributes for the Point (see model section)
 ```
 
+```
+[ { latitude: 37.78627132548483,
+    floorLevel: null,
+    horizontalAccuracy: 65,
+    verticalAccuracy: 10,
+    uuid: '3C332578-2A1F-40D5-9A16-EB9F7CE724DF',
+    longitude: -122.3976185810548,
+    timestamp: 1472717834.417828,
+    altitude: 12.39452648162842 },
+  { latitude: 37.78627132548483,
+    floorLevel: null,
+    horizontalAccuracy: 65,
+    verticalAccuracy: 10,
+    uuid: '4ABCE83B-4557-4556-9421-51E0238656A7',
+    longitude: -122.3976185810548,
+    timestamp: 1472717834.417852,
+    altitude: 12.39452648162842 }]
+```
+
 ### GET /points
 Retrieve a user's points within a time interval (default the past week)
 ```yaml
@@ -125,24 +144,3 @@ querystring:
 | horizontal_accuracy | double |
 | account_id | BigInt |
 | created_at | timestamptz |
-
-```
-[ { latitude: 37.78627132548483,
-    floorLevel: null,
-    horizontalAccuracy: 65,
-    verticalAccuracy: 10,
-    uuid: '3C332578-2A1F-40D5-9A16-EB9F7CE724DF',
-    longitude: -122.3976185810548,
-    isSaved: 0,
-    timestamp: 1472717834.417828,
-    altitude: 12.39452648162842 },
-  { latitude: 37.78627132548483,
-    floorLevel: null,
-    horizontalAccuracy: 65,
-    verticalAccuracy: 10,
-    uuid: '4ABCE83B-4557-4556-9421-51E0238656A7',
-    longitude: -122.3976185810548,
-    isSaved: 0,
-    timestamp: 1472717834.417852,
-    altitude: 12.39452648162842 }]
-```
