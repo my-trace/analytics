@@ -27,7 +27,7 @@ def users():
         existing_account = Account.query.filter_by(facebook_id=str(data['id'])).first()
         if existing_account:
             res = jsonify({ 'message': 'already registered' })
-            res.status_code = 400
+            res.status_code = 201
             return res
         new_account = Account(facebook_id=data['id'], name=data['name'], email=data['email'])
         db.session.add(new_account)
