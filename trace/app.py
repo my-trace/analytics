@@ -1,7 +1,11 @@
+import os, json
+
+from datetime import datetime, timedelta
 from flask import Flask, request as req, Response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
-import os, json
+from sqlalchemy.exc import (
+    IntegrityError
+)
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -9,7 +13,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from helpers import fb_auth 
+from helpers import fb_auth, bulk_insert_points
 from models import Point, Account
 
 @app.route('/health')
@@ -39,12 +43,13 @@ def users(facebook_id):
 @app.route('/points', methods=['GET', 'POST'])
 def points():
     if req.method == 'POST':
-        data = json.loads(req.data)
-        facebook_token = req.headers['Authorization']
-        for point in data:
-            point['account_id'] = facebook_token
-            db.session.add(Point(**point))
-        db.session.commit()
+        points = json.loads(req.data)
+        # TODO: will get account_id from wrapper instead of authorization
+        account_id = req.headers['Authorization']
+        for point in points:
+            point.update({'account_id': account_id})
+        bulk_insert_points(db, points)
+
         return Response('', status=201)
 
     else:
