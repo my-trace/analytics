@@ -14,16 +14,16 @@ points_column = inspect(Point).columns.keys()
 
 def fb_auth(action):
     @functools.wraps(action)
-    def wrap():
+    def wrap(req):
         if 'Authorization' not in req.headers:
             res = json.dumps({ 'message': 'unauthorized' })
             return Response(res, status=401, mimetype='application/json')
-        their_token = req.headers['Authorization']
-        our_token = app.config['APP_TOKEN']
+        facebook_token = req.headers['Authorization']
+        app_token = app.config['APP_TOKEN']
         reply = requests.get(
             'https://graph.facebook.com/debug_token?' + 
-            'input_token=' + their_token +
-            '&access_token=' + our_token)
+            'input_token=' + facebook_token +
+            '&access_token=' + app_token)
         reply_body = json.loads(reply.text)
         if reply_body['data']['is_valid']:
             user_id = reply_body['data']['user_id']
