@@ -1,7 +1,9 @@
 from app import db
+from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref
-from datetime import datetime
+from sqlalchemy.ext.declarative import declared_attr
 
 
 class Account(db.Model):
@@ -26,10 +28,8 @@ class Account(db.Model):
     def to_dict(self):
         return { c.name: getattr(self, c.name) for c in self.__table__.columns }
 
-
-class Point(db.Model):
-    __tablename__ = 'points'
-
+class PointBase(db.Model):
+    __abstract__ = True
     id = db.Column(UUID, primary_key=True)
     lat = db.Column(db.Float, nullable=False)
     lng = db.Column(db.Float, nullable=False)
@@ -37,10 +37,9 @@ class Point(db.Model):
     floor_level = db.Column(db.Integer)
     vertical_accuracy = db.Column(db.Float)
     horizontal_accuracy = db.Column(db.Float)
-    account_id = db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
     created_at = db.Column(db.DateTime(timezone=True))
 
-    account = relationship('Account')
+    # account = relationship('Account')
 
     def __init__(self, uuid, longitude, latitude, account_id, **props):
         self.id = uuid
@@ -61,6 +60,20 @@ class Point(db.Model):
 
     def to_dict(self):
         return { c.name: getattr(self, c.name) for c in self.__table__.columns }
+
+    @declared_attr
+    def account_id(self):
+        return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
+
+
+class Point(PointBase):
+    __tablename__ = 'points'
+
+    
+# the same as Points, we store points temporarily before bulk inserting into points table
+class PointTemp(PointBase):
+    __tablename__ = 'points_temp'
+
 
 
 

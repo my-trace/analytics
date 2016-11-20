@@ -29,6 +29,12 @@ $ foreman run python manage.py db upgrade
 
 The development database name is called **trace-dev**
 
+### Generate SQL to run on production database
+```
+foreman run python manage.py db upgrade --sql
+```
+Copy and paste the output and then run in psql client
+
 ## Development
 
 ### Run the app
@@ -61,6 +67,10 @@ $ foreman run docker
 ### Environment vars
 The `.env` is in the `.dockerignore` so don't use that. Use the command line `--env` option. See `bin/docker` for example.
 
+###To open an interactive python shell with environmental shell
+```
+$ foreman run shell
+```
 
 ## Routes
 
@@ -141,3 +151,15 @@ querystring:
 | horizontal_accuracy | double |
 | account_id | BigInt |
 | created_at | timestamptz |
+
+###Useful SQL commands
+Populate database with Alex user
+```
+insert into accounts (name, email, facebook_id)
+values ('Alex Zai', 'azai91@gmail.com', 10155884975025525)
+```
+
+
+
+
+
