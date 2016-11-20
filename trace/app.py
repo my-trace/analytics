@@ -21,16 +21,15 @@ def health():
     return 'healthy'
 
 @app.route('/users', methods=['GET', 'POST'])
-@fb_auth
-def users(facebook_id):
+def users():
     if req.method == 'POST':
-        existing_account = Account.query.filter_by(id=account_id).first()
+        data = json.loads(req.data)
+        existing_account = Account.query.filter_by(facebook_id=str(data['id'])).first()
         if existing_account:
             res = jsonify({ 'message': 'already registered' })
             res.status_code = 400
             return res
-        data = json.loads(req.data)
-        new_account = Account(facebook_id=facebook_id, name=data['name'], email=data['email'])
+        new_account = Account(facebook_id=data['id'], name=data['name'], email=data['email'])
         db.session.add(new_account)
         db.session.commit()
         res = jsonify(new_account.to_dict())
