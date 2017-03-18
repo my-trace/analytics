@@ -1,4 +1,6 @@
 # MyTrace Core API
+This service is used for visualize clusters and display places for individual users.
+
 
 ## Setup
 
@@ -87,16 +89,6 @@ headers:
 body:
   name: string
   email: string
-```
-
-### POST /points
-Save a user's points.
-```yaml
-headers:
-  Authorization: <fb token>
-  Content-Type: application/json
-
-body: json-array of the attributes for the Point (see model section)
 ```
 
 ```
