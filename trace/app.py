@@ -1,7 +1,7 @@
 import os, json
 
 from datetime import datetime, timedelta
-from flask import Flask, request as req, Response, jsonify
+from flask import Flask, request as req, Response, jsonify, send_from_directory
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import (
     IntegrityError
@@ -24,7 +24,9 @@ def health():
 def users():
     if req.method == 'POST':
         data = json.loads(req.data)
+        print data
         existing_account = Account.query.filter_by(facebook_id=str(data['id'])).first()
+        print 'existing account', existing_account
         if existing_account:
             res = jsonify({ 'message': 'already registered' })
             res.status_code = 201
@@ -41,6 +43,7 @@ def users():
 
 @app.route('/points', methods=['GET', 'POST'])
 def points():
+    print 'started request'
     if req.method == 'POST':
         points = json.loads(req.data)
         # TODO: will get account_id from wrapper instead of authorization
@@ -52,8 +55,8 @@ def points():
         return Response('', status=201)
 
     else:
-        lower = datetime.now() - timedelta(weeks=1)
-        upper = datetime.now()
+        lower = datetime.now() - timedelta(weeks=22)
+        upper = datetime.now() - timedelta(weeks=21)
         if 'from' in req.args:
             lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
         if 'until' in req.args:
@@ -61,13 +64,23 @@ def points():
         if upper < lower:
             res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
             return Response(res, status=400, mimetype='application/json')
+        # remove this
+        account_id = 'c2e07d98-a6c3-4ac5-a515-4c7145b29f38'
+        print os.environ['DEV_DB_URL']
         points = Point.query.filter_by(account_id=account_id) \
             .filter(Point.created_at >= lower) \
             .filter(Point.created_at <= upper) \
             .all()
+        print len(points)
         return jsonify([point.to_dict() for point in points])
 
+@app.route('/')
+def root():
+    return send_from_directory('./../client', 'index.html')
 
+@app.route('/js/<path:path>')
+def js(path):
+    return send_from_directory('./../client/js', path)
 
 if __name__ == '__main__':
     app.run()
