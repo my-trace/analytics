@@ -11,6 +11,7 @@ Install these before getting started.
 2. pip
 3. virtualenv
 4. foreman [https://github.com/ddollar/foreman](https://github.com/ddollar/foreman)
+5. Postgres
 
 ### Create virtual env
 ```
