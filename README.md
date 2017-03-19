@@ -42,7 +42,8 @@ Copy and paste the output and then run in psql client
 
 ### Run the app
 ```
-$ foreman run web
+$ foreman run dev # to load sample data from sqlite
+$ foreman run web # to load data from prod
 ```
 
 ### Run the tests
@@ -79,18 +80,6 @@ $ foreman run shell
 
 ### GET /health
 A health check endpoint.
-
-### POST /users
-Register a user from Facebook.
-```yaml
-headers:
-  Authorization: <fb token>
-  Content-Type: application/json
-
-body:
-  name: string
-  email: string
-```
 
 ```
 [ { latitude: 37.78627132548483,

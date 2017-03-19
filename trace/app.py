@@ -13,7 +13,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from helpers import fb_auth, bulk_insert_points
+from helpers import fb_auth
 from models import Point, Account
 
 @app.route('/health')
@@ -43,32 +43,22 @@ def users():
 
 @app.route('/points', methods=['GET', 'POST'])
 def points():
-    if req.method == 'POST':
-        points = json.loads(req.data)
-        # TODO: will get account_id from wrapper instead of authorization
-        account_id = req.headers['Authorization']
-        for point in points:
-            point.update({'account_id': account_id})
-        bulk_insert_points(db, points)
+    lower = datetime.now() - timedelta(weeks=9)
+    upper = datetime.now() - timedelta(weeks=8)
+    if 'from' in req.args:
+        lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
+    if 'until' in req.args:
+        upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
+    if upper < lower:
+        res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
+        return Response(res, status=400, mimetype='application/json')
 
-        return Response('', status=201)
-
-    else:
-        lower = datetime.now() - timedelta(weeks=9)
-        upper = datetime.now() - timedelta(weeks=6)
-        if 'from' in req.args:
-            lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
-        if 'until' in req.args:
-            upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
-        if upper < lower:
-            res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
-            return Response(res, status=400, mimetype='application/json')
-        points = Point.query.with_entities(Point.created_at, Point.lat, Point.lng) \
-            .filter_by(account_id=account_id) \
-            .filter(Point.created_at >= lower) \
-            .filter(Point.created_at <= upper) \
-            .all()
-        return jsonify([point.to_dict() for point in points])
+    account_id = 'c2e07d98-a6c3-4ac5-a515-4c7145b29f38'
+    points = Point.query.filter_by(account_id=account_id) \
+        .filter(Point.created_at >= lower) \
+        .filter(Point.created_at <= upper) \
+        .all()
+    return jsonify([point.to_sparse_dict() for point in points])
 
 @app.route('/')
 def root():
@@ -77,6 +67,10 @@ def root():
 @app.route('/js/<path:path>')
 def js(path):
     return send_from_directory('./../client/js', path)
+
+@app.route('/data/<path:path>')
+def data(path):
+    return send_from_directory('./../client/data', path)
 
 if __name__ == '__main__':
     app.run()

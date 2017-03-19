@@ -5,7 +5,8 @@ function initMap() {
     zoom: 8
   });
   console.log('staarting query');
-  getPoints().then(renderLine);
+  console.log(sample_locations.length);
+  // getPoints().then(renderLine);
 }
 
 function renderLine(coordinates) {

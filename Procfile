@@ -1,5 +1,6 @@
-web: python -m flask run --host=0.0.0.0
-shell: python -m flask shell
+web: APP_SETTINGS=trace.config.PRODUCTION python -m flask run --host=0.0.0.0
+dev: python -m flask run --host=0.0.0.0
+shell: PROD=1; python -m flask shell
 build: docker build -t api .
 docker: bin/docker
 install: pip install -r requirements.txt
