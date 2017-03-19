@@ -1,7 +1,6 @@
 # MyTrace Core API
 This service is used for visualize clusters and display places for individual users.
 
-
 ## Setup
 
 ### Dependencies
@@ -12,6 +11,7 @@ Install these before getting started.
 3. virtualenv
 4. foreman [https://github.com/ddollar/foreman](https://github.com/ddollar/foreman)
 5. Postgres
+6. Sample Data (mytrace-dev.db) - Get from Alex
 
 ### Create virtual env
 ```
@@ -134,7 +134,7 @@ querystring:
 | account_id | BigInt |
 | created_at | timestamptz |
 
-###Useful SQL commands
+### Useful SQL commands
 Populate database with Alex user
 ```
 insert into accounts (name, email, facebook_id)
