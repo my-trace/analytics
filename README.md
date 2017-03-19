@@ -11,7 +11,6 @@ Install these before getting started.
 3. virtualenv
 4. foreman [https://github.com/ddollar/foreman](https://github.com/ddollar/foreman)
 5. Postgres
-6. Sample Data (mytrace-dev.db) - Get from Alex
 
 ### Create virtual env
 ```
@@ -39,6 +38,12 @@ foreman run python manage.py db upgrade --sql
 Copy and paste the output and then run in psql client
 
 ## Development
+
+## Downloading sample data
+```
+./client/data/get-data.sh
+./trace/data/get-data.sh
+```
 
 ### Run the app
 ```
