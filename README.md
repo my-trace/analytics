@@ -51,6 +51,8 @@ $ foreman run dev # to load sample data from sqlite
 $ foreman run web # to load data from prod
 ```
 
+The site is located on `http://localhost:5000/`
+
 ### Run the tests
 ```
 $ foreman run test
