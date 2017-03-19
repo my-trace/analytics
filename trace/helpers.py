@@ -6,7 +6,6 @@ from flask import request as req, Response
 from sqlalchemy import inspect
 
 from models import (
-    PointTemp,
     Point,
 )
 
@@ -33,28 +32,6 @@ def fb_auth(action):
             return Response(res, status=500, mimetype='application/json')
 
     return wrap
-
-def bulk_insert_points(db, points):
-    if not points:
-        return
-    engine = db.engine
-    sql = """
-    BEGIN;
-    LOCK TABLE points_temp IN EXCLUSIVE MODE;
-    TRUNCATE points_temp;
-    COMMIT;
-    """
-    engine.execute(sql)
-    point_temps = [PointTemp(**point) for point in points]
-    db.session.bulk_save_objects(point_temps)
-    db.session.commit()
-    sql = """
-    BEGIN;
-    LOCK TABLE points IN EXCLUSIVE MODE;
-    INSERT INTO points ({columns}) SELECT {columns} from points_temp WHERE NOT EXISTS (SELECT 1 FROM points WHERE points_temp.id = points.id);
-    COMMIT;
-    """.format(columns=','.join(points_column))
-    engine.execute(sql)
 
 
 
