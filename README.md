@@ -11,7 +11,6 @@ Install these before getting started.
 3. virtualenv
 4. foreman [https://github.com/ddollar/foreman](https://github.com/ddollar/foreman)
 5. Postgres
-6. Sample Data (mytrace-dev.db) - Get from Alex
 
 ### Create virtual env
 ```
@@ -40,11 +39,19 @@ Copy and paste the output and then run in psql client
 
 ## Development
 
+## Downloading sample data
+```
+./client/data/get-data.sh
+./trace/data/get-data.sh
+```
+
 ### Run the app
 ```
 $ foreman run dev # to load sample data from sqlite
 $ foreman run web # to load data from prod
 ```
+
+The site is located on `http://localhost:5000/`
 
 ### Run the tests
 ```
