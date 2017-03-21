@@ -2,5 +2,7 @@
 .env
 env/
 **/.DS_Store
-trace/data/mytrace-dev.db
-client/data/sample_locations.js
+trace/data/*
+!trace/data/get-data.sh
+client/data/*
+!client/data/get-data.sh
