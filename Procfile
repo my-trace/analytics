@@ -8,3 +8,4 @@ env: . bin/env
 test: export APP_SETTINGS=trace.config.Test; python test.py
 lint: pylint ./trace
 psql: psql -h mytrace-db.c1yc0fhyowtw.us-west-1.rds.amazonaws.com -U azai91 -d mytrace_db
+test_services: export APP_SETTINGS=trace.config.Test; ./env/bin/pytest tests
