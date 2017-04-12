@@ -43,21 +43,22 @@ def users():
 
 @app.route('/points', methods=['GET', 'POST'])
 def points():
-    lower = datetime.now() - timedelta(weeks=20)
-    upper = datetime.now() - timedelta(weeks=18)
-    if 'from' in req.args:
-        lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
-    if 'until' in req.args:
-        upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
-    if upper < lower:
-        res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
-        return Response(res, status=400, mimetype='application/json')
+    print 'hello'
+    # lower = datetime.now() - timedelta(weeks=20)
+    # upper = datetime.now() - timedelta(weeks=18)
+    # if 'from' in req.args:
+    #     lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
+    # if 'until' in req.args:
+    #     upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
+    # if upper < lower:
+    #     res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
+    #     return Response(res, status=400, mimetype='application/json')
 
-    points = Point.query.filter_by(account_id=account_id) \
-        .filter(Point.created_at >= lower) \
-        .filter(Point.created_at <= upper) \
-        .all()
-    return jsonify([point.to_sparse_dict() for point in points])
+    # points = Point.query.filter_by(account_id=account_id) \
+    #     .filter(Point.created_at >= lower) \
+    #     .filter(Point.created_at <= upper) \
+    #     .all()
+    # return jsonify([point.to_sparse_dict() for point in points])
 
 @app.route('/')
 def root():
