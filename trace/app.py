@@ -10,20 +10,20 @@ from sqlalchemy.exc import (
 import sys
 sys.path.append('/opt/python/current/app/trace')
 
-application = Flask(__name__)
-application.config.from_object(os.environ['APP_SETTINGS'])
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
 # this adds a lot of overhead, so we'll disable it
-application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(application)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 from helpers import fb_auth
 from models import Point, Account
 
-@application.route('/health')
+@app.route('/health')
 def health():
     return 'healthy'
 
-@application.route('/users', methods=['GET', 'POST'])
+@app.route('/users', methods=['GET', 'POST'])
 def users():
     if req.method == 'POST':
         data = json.loads(req.data)
@@ -44,7 +44,7 @@ def users():
         accounts = Account.query.all()
         return jsonify([account.to_dict() for account in accounts])
 
-@application.route('/points', methods=['GET', 'POST'])
+@app.route('/points', methods=['GET', 'POST'])
 def points():
     print 'hello'
     # lower = datetime.now() - timedelta(weeks=20)
@@ -55,7 +55,7 @@ def points():
     #     upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
     # if upper < lower:
     #     res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
-    #     return Response(res, status=400, mimetype='application/json')
+    #     return Response(res, status=400, mimetype='app/json')
 
     # points = Point.query.filter_by(account_id=account_id) \
     #     .filter(Point.created_at >= lower) \
@@ -63,17 +63,17 @@ def points():
     #     .all()
     # return jsonify([point.to_sparse_dict() for point in points])
 
-@application.route('/')
+@app.route('/')
 def root():
     return send_from_directory('./../client', 'index.html')
 
-@application.route('/js/<path:path>')
+@app.route('/js/<path:path>')
 def js(path):
     return send_from_directory('./../client/js', path)
 
-@application.route('/data/<path:path>')
+@app.route('/data/<path:path>')
 def data(path):
     return send_from_directory('./../client/data', path)
 
 if __name__ == '__main__':
-    application.run()
+    app.run()

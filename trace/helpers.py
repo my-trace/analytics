@@ -1,7 +1,7 @@
 import requests
 import json, functools
 
-from application import application
+from app import app
 from flask import request as req, Response
 from sqlalchemy import inspect
 
