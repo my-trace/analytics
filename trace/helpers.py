@@ -10,7 +10,7 @@ from sqlalchemy import inspect
 #     Point,
 # )
 
-points_column = inspect(Point).columns.keys()
+# points_column = inspect(Point).columns.keys()
 
 def fb_auth(action):
     @functools.wraps(action)
