@@ -6,9 +6,9 @@ import os
 from flask import request as req, Response
 from sqlalchemy import inspect
 
-from models import (
-    Point,
-)
+# from models import (
+#     Point,
+# )
 
 points_column = inspect(Point).columns.keys()
 
