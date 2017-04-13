@@ -13,7 +13,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from helpers import fb_auth
+from helpers import trace.fb_auth
 from models import Point, Account
 
 @app.route('/health')
