@@ -10,20 +10,20 @@ from sqlalchemy.exc import (
 import sys
 sys.path.append('/opt/python/current/app/trace')
 
-app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+application = Flask(__name__)
+application.config.from_object(os.environ['APP_SETTINGS'])
 # this adds a lot of overhead, so we'll disable it
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(application)
 
 from helpers import fb_auth
 from models import Point, Account
 
-@app.route('/health')
+@application.route('/health')
 def health():
     return 'healthy'
 
-@app.route('/users', methods=['GET', 'POST'])
+@application.route('/users', methods=['GET', 'POST'])
 def users():
     if req.method == 'POST':
         data = json.loads(req.data)
@@ -44,7 +44,7 @@ def users():
         accounts = Account.query.all()
         return jsonify([account.to_dict() for account in accounts])
 
-@app.route('/points', methods=['GET', 'POST'])
+@application.route('/points', methods=['GET', 'POST'])
 def points():
     print 'hello'
     # lower = datetime.now() - timedelta(weeks=20)
@@ -63,17 +63,17 @@ def points():
     #     .all()
     # return jsonify([point.to_sparse_dict() for point in points])
 
-@app.route('/')
+@application.route('/')
 def root():
     return send_from_directory('./../client', 'index.html')
 
-@app.route('/js/<path:path>')
+@application.route('/js/<path:path>')
 def js(path):
     return send_from_directory('./../client/js', path)
 
-@app.route('/data/<path:path>')
+@application.route('/data/<path:path>')
 def data(path):
     return send_from_directory('./../client/data', path)
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
