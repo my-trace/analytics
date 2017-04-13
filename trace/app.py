@@ -8,8 +8,7 @@ from sqlalchemy.exc import (
 )
 
 import sys
-sys.path.insert(0, '/opt/python/current/app/trace')
-
+sys.path.append('/opt/python/current/app/trace')
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
