@@ -18,7 +18,6 @@ services:
 addons:
   # default postgres version is 9.1, which lacks the features we need
   postgresql: "9.4"
-install: foreman run install
 env:
   global:
     PG_URL=postgres://localhost/travis_dev
