@@ -30,7 +30,6 @@ env:
     DEV_DB_URL=postgres://localhost/trace-dev
     TZ=UTC
     APP_ID=test_app_id
-    APP_KEY=test_key 
-    APP_TOKEN=test_secret
-    HOST=localhost:3333
+    APP_SECRET=test_secret 
+    APP_TOKEN=test_token
     ANDY_TOKEN=andy_token
