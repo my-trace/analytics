@@ -7,13 +7,17 @@ from sqlalchemy.exc import (
     IntegrityError
 )
 
+import sys
+sys.path.insert(0, '/opt/python/current/app/trace')
+
+
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 # this adds a lot of overhead, so we'll disable it
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from helpers import trace.fb_auth
+from helpers import fb_auth
 from models import Point, Account
 
 @app.route('/health')
