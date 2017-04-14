@@ -1,3 +1,0 @@
-{
-  "tests/services/test_google_places.py::test_to_mt_places_dict": true
-}

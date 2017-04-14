@@ -2,7 +2,7 @@ import requests
 import os
 
 # GP_API_KEY=os.environ['GP_API_KEY']
-GP_API_KEY='test'
+GP_API_KEY='TEST_GP_API_KEY'
 
 GOOGLE_PLACES_SEARCH_URL='https://maps.googleapis.com/maps/api/place/nearbysearch/json?rankby=distance&key={api_key}'.format(api_key=GP_API_KEY)
 
@@ -31,7 +31,7 @@ class GooglePlace(object):
     @classmethod
     def get_photo_link(cls, photo_reference):
         url = '{}&photoreference={}'.format(GOOGLE_PLACES_PHOTO_URL, photo_reference)
-        return GOOGLE_PLACES_PHOTO_URL.format(photoreference=photo_reference)
+        return url
 
 
     # just use opening hours
@@ -46,7 +46,7 @@ class GooglePlace(object):
     @classmethod
     def to_mt_places_dict(cls, result):
         return {
-            'name': str(result['name'].encode('utf-8')),
+            'name': result['name'],
             # 'periods': result.periods,
             'lat': result['geometry']['location']['lat'],
             'lng': result['geometry']['location']['lng'],

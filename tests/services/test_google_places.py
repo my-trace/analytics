@@ -1,6 +1,7 @@
 import pytest
+import os
 from trace.services.google_places import GooglePlace
-
+# os.setenv('')
 
 @pytest.fixture
 def gp_place():
@@ -10,11 +11,14 @@ def gp_place():
 		u'price_level': 1, 
 		u'geometry': {u'location': {u'lat': 34.0623974, u'lng': -118.4475638}, u'viewport': {u'northeast': {u'lat': 34.0636840802915, u'lng': -118.4461623197085}, u'southwest': {u'lat': 34.0609861197085, u'lng': -118.4488602802915}}}, 
 		u'opening_hours': {u'weekday_text': [], u'open_now': False}, 
-		u'place_id': u'ChIJE8wEhYO8woARzV9If3c3Ta4', u'vicinity': u'10965 Weyburn Avenue, Los Angeles', u'photos': [{u'photo_reference': u'CoQBdwAAAP5bDvoIct0NNLcpw8n6ANc-PmwacthkcZh1pL8SUxDXfmXPzJdiAZw4orhMJVoELeY5EUQqRUd5H7CLNYhuBQUGCpL5BEBGpp86fftDGkXvYlpuETvMg7XBVsBbzxGHUZ1JbAgkCd6gzq9MfM5LguUjolfVB89X2BQrBNW2-o8WEhBbumWLqy3m_HWqtWaeRzqLGhQGKYIsZv9-81bB0IEwRr7p_tB_oA', u'width': 5312, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/102856103254091034976/photos">Zhiwen Huang</a>'], u'height': 2988}], u'scope': u'GOOGLE', u'id': u'89fd6508ba52932d08e29f4c05588188118eec28', u'types': [u'cafe', u'restaurant', u'food', u'point_of_interest', u'establishment'], u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}
+		u'place_id': u'ChIJE8wEhYO8woARzV9If3c3Ta4', u'vicinity': u'10965 Weyburn Avenue, Los Angeles', u'photos': [{u'photo_reference': u'test_photo_reference', u'width': 5312, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/102856103254091034976/photos">Zhiwen Huang</a>'], u'height': 2988}], u'scope': u'GOOGLE', u'id': u'89fd6508ba52932d08e29f4c05588188118eec28', u'types': [u'cafe', u'restaurant', u'food', u'point_of_interest', u'establishment'], u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}
 
 def test_to_mt_places_dict(gp_place):
 	result = GooglePlace.to_mt_places_dict(gp_place)
 	expected_result = {
-		name: ''
+		'name': u'Koala T Caf\xe9',
+		'lat': 34.0623974,
+		'lng': -118.4475638,
+		'photo': 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=TEST_GP_API_KEY&photoreference=test_photo_reference',
 	}
 	assert result == expected_result
