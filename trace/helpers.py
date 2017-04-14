@@ -1,15 +1,16 @@
 import requests
 import json, functools
+import os
 
-from app import app
+
 from flask import request as req, Response
 from sqlalchemy import inspect
 
-from models import (
-    Point,
-)
+# from models import (
+#     Point,
+# )
 
-points_column = inspect(Point).columns.keys()
+# points_column = inspect(Point).columns.keys()
 
 def fb_auth(action):
     @functools.wraps(action)
@@ -18,7 +19,7 @@ def fb_auth(action):
             res = json.dumps({ 'message': 'unauthorized' })
             return Response(res, status=401, mimetype='application/json')
         facebook_token = req.headers['Authorization']
-        app_token = app.config['APP_TOKEN']
+        app_token = os.getenv('APP_TOKEN')
         reply = requests.get(
             'https://graph.facebook.com/debug_token?' + 
             'input_token=' + facebook_token +

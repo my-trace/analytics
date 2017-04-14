@@ -1,0 +1,35 @@
+language: python
+python:
+- '2.7'
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: AKIAIP2TXU5AFOO6KQGQ
+  bucket_name: elasticbeanstalk-us-west-1-580039650320
+  secret_access_key:
+    secure: yBgjt+dSKio8yL5N2UEW/neELrmOIshIJSWgMHZDDQ2VgNq59/KW0RqqIlteemfsDXmmpZnJX+LzSorfvzEKtZM1AETsAqygZyOkKAbwohFxEzoS59K7h5hBD2FatvOupKlJFsM+YRHbNBorRSffIntpfuCwu3hkGik+LhneC/A/bqTQTYkMPDrmQqI5YzaYgJmtKjIONTGsvNNYdwUxeSUrtSCxupZxirVulbil631CZO/7bKpOwi+qlLYy//iE1ocSwiU+45VdxYq49iF99rMKZMw5Zmgj+J8SxyDU9jtrPvtRHb2r5i50UrK2uUZegIH9cuYFKDn0D5G9XxcVypV/Yite+klPegBusGhQNFw0sjOTV74XVNBVvvWADSK52kwo3PzTZThJt29LnrSH8/5j6ByAcIwPbqrOZ0gnVgWq7VDANdQcWSrlGpwcsOYTD/6D2euhZLYJIixTydqbxX+T+4gtlRLFKnVcONeKkyzw9nmgEcgGyBQkZCtCmFh5iMOWaAOrnvPRSghwpkw5ok5a3IabZfOBRxPf8zdSDzKWpTu0KncOuRwfs2XU0/N3nYcuOguFAAaWUmdV6kJTBp573083dF95vPeWu82WfaAu9j7jK998OH0+8ndGf7pF6Y4MWplqWA7mYa55fWriVrucBroMP+3LmkDDzr4lZSk=
+  region: us-west-1
+  app: analytics
+  env: analytics
+  on:
+    repo: my-trace/analytics
+    branch: master
+services:
+- postgresql
+addons:
+  postgresql: '9.4'
+install:
+  - gem install foreman
+  - foreman run install
+script:
+  - foreman run test
+env:
+  global: 
+    FLASK_APP=trace/app.py
+    FLASK_DEBUG=1
+    APP_SETTINGS=trace.config.Test
+    DEV_DB_URL=postgres://localhost/trace-dev
+    TZ=UTC
+    APP_ID=test_app_id
+    APP_SECRET=test_secret 
+    APP_TOKEN=test_token
+    ANDY_TOKEN=andy_token
