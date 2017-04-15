@@ -1,7 +1,6 @@
 import pytest
 import os
-from trace.services.google_places import GooglePlace
-# os.setenv('')
+from trace.services.google_places import GooglePlacesService
 
 @pytest.fixture
 def gp_place():
@@ -14,7 +13,7 @@ def gp_place():
 		u'place_id': u'ChIJE8wEhYO8woARzV9If3c3Ta4', u'vicinity': u'10965 Weyburn Avenue, Los Angeles', u'photos': [{u'photo_reference': u'test_photo_reference', u'width': 5312, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/102856103254091034976/photos">Zhiwen Huang</a>'], u'height': 2988}], u'scope': u'GOOGLE', u'id': u'89fd6508ba52932d08e29f4c05588188118eec28', u'types': [u'cafe', u'restaurant', u'food', u'point_of_interest', u'establishment'], u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}
 
 def test_to_mt_places_dict(gp_place):
-	result = GooglePlace.to_mt_places_dict(gp_place)
+	result = GooglePlacesService.to_mt_places_dict(gp_place)
 	expected_result = {
 		'name': u'Koala T Caf\xe9',
 		'lat': 34.0623974,
@@ -22,3 +21,5 @@ def test_to_mt_places_dict(gp_place):
 		'photo': 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key=TEST_GP_API_KEY&photoreference=test_photo_reference',
 	}
 	assert result == expected_result
+
+# def 

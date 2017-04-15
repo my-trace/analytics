@@ -10,7 +10,7 @@ GOOGLE_PLACES_DETAILS_URL='https://maps.googleapis.com/maps/api/place/details/js
 
 GOOGLE_PLACES_PHOTO_URL='https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key={api_key}'.format(api_key=GP_API_KEY)
 
-class GooglePlace(object):
+class GooglePlacesService(object):
     def __init__(self, name, lat, lng, place_id, photo_reference, periods=None):
         self.name = name
         self.lat = lat

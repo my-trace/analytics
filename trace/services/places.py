@@ -12,7 +12,9 @@ class PlacesService(object):
 
     @classmethod
     def get_places_by_location(cls, lat, lng):
-        GooglePlace.get_places_by_location(lat, lng)
+        return GooglePlace.get_places_by_location(lat, lng)[0]
+
+
 
 
 

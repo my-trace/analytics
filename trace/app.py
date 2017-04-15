@@ -7,6 +7,9 @@ from sqlalchemy.exc import (
     IntegrityError
 )
 
+from dbscan import get_points_from_range
+from services.places import PlacesService
+
 import sys
 sys.path.insert(0, '/opt/python/current/app/trace')
 
@@ -121,24 +124,17 @@ def users():
         accounts = Account.query.all()
         return jsonify([account.to_dict() for account in accounts])
 
-@application.route('/points', methods=['GET', 'POST'])
-def points():
-    print 'hello'
-    # lower = datetime.now() - timedelta(weeks=20)
-    # upper = datetime.now() - timedelta(weeks=18)
-    # if 'from' in req.args:
-    #     lower = datetime.fromtimestamp(int(req.args.get('from')) / 1000.0)
-    # if 'until' in req.args:
-    #     upper = datetime.fromtimestamp(int(req.args.get('until')) / 1000.0)
-    # if upper < lower:
-    #     res = json.dumps({ 'message': 'Upper bound cannot be less than lower bound.' })
-    #     return Response(res, status=400, mimetype='application/json')
+@application.route('/places', method=['GET'])
+def places():
+    # default to one week
+    now = datetime.now()
+    one_week_ago = now - timedelta(days=7)
+    significant_points = get_points_from_range(one_week_ago, now)
 
-    # points = Point.query.filter_by(account_id=account_id) \
-    #     .filter(Point.created_at >= lower) \
-    #     .filter(Point.created_at <= upper) \
-    #     .all()
-    # return jsonify([point.to_sparse_dict() for point in points])
+    ## currently just gets the closest place without timestamp
+    significant_places = PlacesService.get_places_from_coordinates(significant_points)
+    return jsonify(significant_places)
+
 
 @application.route('/')
 def root():
