@@ -2,112 +2,46 @@ import os, json
 
 from datetime import datetime, timedelta
 from flask import Flask, request as req, Response, jsonify, send_from_directory
+from extensions import db
+application = Flask(__name__)
+application.config.from_object(os.environ['APP_SETTINGS'])
+def configure_extensions(app):
+    db.init_app(app)
+
+
+
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import (
     IntegrityError
 )
 
-from dbscan import get_points_from_range
+from dbscan import DBScanner
 from services.places import PlacesService
 
 import sys
 sys.path.insert(0, '/opt/python/current/app/trace')
 
-application = Flask(__name__)
-application.config.from_object(os.environ['APP_SETTINGS'])
+
 # this adds a lot of overhead, so we'll disable it
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(application)
-
-
 
 from helpers import fb_auth
-# from models import Point, Account
-
-# from datetime import datetime
-
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship, backref, deferred
-from sqlalchemy.ext.declarative import declared_attr
-
-## will move to another file later
-class Account(db.Model):
-    __tablename__ = 'accounts'
-
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255))
-    email = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow) 
-    facebook_id = db.Column(db.BigInteger)
-
-    points = relationship('Point', cascade="delete")
-
-    def __init__(self, facebook_id, name, email):
-        self.name = name
-        self.email = email
-        self.facebook_id = facebook_id
-
-    def __repr__(self):
-        return '<Account email=(%s)>' % self.email
-
-    def to_dict(self):
-        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
-
-class Point(db.Model):
-    __tablename__ = 'points'
-
-    id = db.Column(UUID, primary_key=True)
-    lat = db.Column(db.Float, nullable=False)
-    lng = db.Column(db.Float, nullable=False)
-    alt = deferred(db.Column(db.Float))
-    floor_level = deferred(db.Column(db.Integer))
-    vertical_accuracy = deferred(db.Column(db.Float))
-    horizontal_accuracy = deferred(db.Column(db.Float))
-    created_at = db.Column(db.DateTime(timezone=True))
-
-    # account = relationship('Account')
-
-    def __init__(self, uuid, longitude, latitude, account_id, **props):
-        self.id = uuid
-        self.lat = longitude
-        self.lng = latitude
-        self.account_id = account_id
-        
-        created_at = props.get('timestamp')
-        self.created_at = datetime.fromtimestamp(created_at / 1000.0) if created_at else datetime.utcnow()
-        
-        self.alt = props.get('altitude')
-        self.floor_level = props.get('floorLevel')
-        self.vertical_accuracy = props.get('verticalAccuracy')
-        self.horizontal_accuracy = props.get('horizontalAccuracy')
-    
-    def __repr__(self):
-        return '<Point lat=(%s) lng=(%s)>' % (self.lat, self.lng)
-
-    def to_dict(self):
-        return { c.name: getattr(self, c.name) for c in self.__table__.columns if self.c }
-
-    def to_sparse_dict(self):
-        # only creates dict from undeferrable columns
-        # columns are deferrable to decrease query time
-        return {'lat': self.lat, 'lng': self.lng, 'created_at': self.created_at}
-
-    @declared_attr
-    def account_id(self):
-        return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
+from trace.models.point import Point
+from trace.models.account import Account
+from trace.services.points import PointsService 
 
 
-
+configure_extensions(application)
 
 @application.route('/health')
 def health():
+    print application.config
     return 'healthy'
 
 @application.route('/users', methods=['GET', 'POST'])
 def users():
     if req.method == 'POST':
         data = json.loads(req.data)
-        print data
         existing_account = Account.query.filter_by(facebook_id=str(data['id'])).first()
         print 'existing account', existing_account
         if existing_account:
@@ -124,15 +58,18 @@ def users():
         accounts = Account.query.all()
         return jsonify([account.to_dict() for account in accounts])
 
-@application.route('/places', method=['GET'])
+@application.route('/places', methods=['GET'])
 def places():
     # default to one week
     now = datetime.now()
     one_week_ago = now - timedelta(days=7)
-    significant_points = get_points_from_range(one_week_ago, now)
-
+    print 'fetching places'
+    locations = PointsService.get_points_from_range(one_week_ago, now)
+    print 'converting to signficant points'
+    significant_points = DBScanner.get_significant_points(locations)
+    print 'fetching places from significant location'
     ## currently just gets the closest place without timestamp
-    significant_places = PlacesService.get_places_from_coordinates(significant_points)
+    significant_places = PlacesService.get_places_by_significant_points(significant_points)
     return jsonify(significant_places)
 
 

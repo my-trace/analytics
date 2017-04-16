@@ -1,12 +1,14 @@
 import requests
 import os
+import trace.config as config
 
 # GP_API_KEY=os.environ['GP_API_KEY']
-GP_API_KEY='TEST_GP_API_KEY'
+GP_API_KEY = config.get('GP_API_KEY')
+# GP_API_KEY = 'AIzaSyCzfEZlOfhK_VTTxfGyXpRBSGbuELsyWpg'
 
 GOOGLE_PLACES_SEARCH_URL='https://maps.googleapis.com/maps/api/place/nearbysearch/json?rankby=distance&key={api_key}'.format(api_key=GP_API_KEY)
 
-GOOGLE_PLACES_DETAILS_URL='https://maps.googleapis.com/maps/api/place/details/json?key={api_key}'.format(api_key=GP_API_KEY)
+GOOGLE_PLACES_DETAILS_URL ='https://maps.googleapis.com/maps/api/place/details/json?key={api_key}'.format(api_key=GP_API_KEY)
 
 GOOGLE_PLACES_PHOTO_URL='https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&key={api_key}'.format(api_key=GP_API_KEY)
 
@@ -51,7 +53,7 @@ class GooglePlacesService(object):
             'lat': result['geometry']['location']['lat'],
             'lng': result['geometry']['location']['lng'],
             # 'type': type,
-            'photo': cls.get_photo_link(result['photos'][0]['photo_reference']),
+            'photo': cls.get_photo_link(result['photos'][0]['photo_reference']) if result.get('photos') else None,
         }
 
 

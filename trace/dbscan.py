@@ -3,11 +3,11 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 
 class DBScanner(object):
-    MIN_SAMPLES = 10
+    MIN_SAMPLES = 2
 
     @classmethod 
     def get_cluster_labels(cls, locations):
-        X = np.array([(c['lat'], c['lng']) for c in locations])
+        X = np.array([(c.lat, c.lng) for c in locations])
         db = DBSCAN(eps=0.3, min_samples=cls.MIN_SAMPLES).fit(X)
         core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
         core_samples_mask[db.core_sample_indices_] = True
@@ -28,7 +28,7 @@ class DBScanner(object):
 
         averaged_locations = []
         for label, coordinates in locations_map.iteritems():
-            average_location = sum(c['lat'] for c in coordinates) / len(coordinates), sum(c['lng'] for c in coordinates) / len(coordinates)
+            average_location = get_average_location(coordinates)
             averaged_locations.append(average_location)
         return averaged_locations    
 
@@ -39,7 +39,9 @@ class DBScanner(object):
         return significant_points
 
 	
+def get_average_location(coordinates):
+    return sum(c.lat for c in coordinates) / len(coordinates), sum(c.lng for c in coordinates) / len(coordinates)
 
-def transform_to_vector(coordinates):
-    # converts coordinates into 2D vectors
-    return [(c.get('lat'), c.get('lng')) for c in coordinates]
+# def transform_to_vector(coordinates):
+#     # converts coordinates into 2D vectors
+#     return [(c.get('lat'), c.get('lng')) for c in coordinates]
