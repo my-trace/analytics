@@ -19,6 +19,7 @@ addons:
   postgresql: '9.4'
 install:
   - gem install foreman
+  - foreman run env
   - foreman run install
 script:
   - foreman run test
