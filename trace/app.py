@@ -2,14 +2,6 @@ import os, json
 
 from datetime import datetime, timedelta
 from flask import Flask, request as req, Response, jsonify, send_from_directory
-from extensions import db
-application = Flask(__name__)
-application.config.from_object(os.environ['APP_SETTINGS'])
-def configure_extensions(app):
-    db.init_app(app)
-
-
-
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import (
     IntegrityError
@@ -17,11 +9,12 @@ from sqlalchemy.exc import (
 
 from dbscan import DBScanner
 from services.places import PlacesService
-
+from extensions import db
 import sys
 sys.path.insert(0, '/opt/python/current/app/trace')
 
-
+application = Flask(__name__)
+application.config.from_object(os.environ['APP_SETTINGS'])
 # this adds a lot of overhead, so we'll disable it
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -30,6 +23,8 @@ from trace.models.point import Point
 from trace.models.account import Account
 from trace.services.points import PointsService 
 
+def configure_extensions(app):
+    db.init_app(app)
 
 configure_extensions(application)
 
@@ -71,6 +66,16 @@ def places():
     ## currently just gets the closest place without timestamp
     significant_places = PlacesService.get_places_by_significant_points(significant_points)
     return jsonify(significant_places)
+
+@application.route('/points', methods=['GET'])
+def points():
+    # default to one week
+    now = datetime.now()
+    one_week_ago = now - timedelta(days=7)
+    print 'fetching points'
+    locations = PointsService.get_points_from_range(one_week_ago, now)
+    print locations
+    return jsonify(locations)
 
 
 @application.route('/')

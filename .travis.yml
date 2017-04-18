@@ -17,7 +17,9 @@ services:
 - postgresql
 addons:
   postgresql: '9.4'
-install: "pip install -r requirements.txt"
+install: 
+  - pip install -U setuptools
+  - pip install -r requirements.txt
 script: "export APP_SETTINGS=trace.config.Test; ./env/bin/pytest -v tests"
 env:
   global: 
