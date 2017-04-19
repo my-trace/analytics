@@ -2,10 +2,11 @@ import requests
 import os
 import trace.config as config
 
-# GP_API_KEY=os.environ['GP_API_KEY']
-GP_API_KEY = config.get('GP_API_KEY')
+# GP_API_KEY='TEST_GP_API_KEY'
+# GP_API_KEY = config.get('GP_API_KEY')
 # GP_API_KEY = 'AIzaSyCzfEZlOfhK_VTTxfGyXpRBSGbuELsyWpg'
 
+GP_API_KEY='AIzaSyAxBHmZ2O0cX52zwSkbbADTpBAoo6M-OWE'
 GOOGLE_PLACES_SEARCH_URL='https://maps.googleapis.com/maps/api/place/nearbysearch/json?rankby=distance&key={api_key}'.format(api_key=GP_API_KEY)
 
 GOOGLE_PLACES_DETAILS_URL ='https://maps.googleapis.com/maps/api/place/details/json?key={api_key}'.format(api_key=GP_API_KEY)

@@ -37,16 +37,17 @@ class Point(db.Model):
         return '<Point lat=(%s) lng=(%s)>' % (self.lat, self.lng)
 
     def to_dict(self):
-        return { c.name: getattr(self, c.name) for c in self.__table__.columns if self.c }
+        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
 
     def to_sparse_dict(self):
         # only creates dict from undeferrable columns
         # columns are deferrable to decrease query time
-        return {'lat': self.lat, 'lng': self.lng, 'created_at': self.created_at}
+        # 'created_at': self.created_at
+        return {'lat': self.lat, 'lng': self.lng}
 
-    @declared_attr
-    def account_id(self):
-        return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
+    # @declared_attr
+    # def account_id(self):
+    #     return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
 
 
 

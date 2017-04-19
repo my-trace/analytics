@@ -17,10 +17,11 @@ services:
 - postgresql
 addons:
   postgresql: '9.4'
-install: 
-  - pip install -U setuptools
-  - pip install -r requirements.txt
-script: "export APP_SETTINGS=trace.config.Test; ./env/bin/pytest -v tests"
+install:
+  - gem install foreman
+  - foreman run install
+script:
+  - foreman run test
 env:
   global: 
     FLASK_APP=trace/app.py
