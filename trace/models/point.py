@@ -3,30 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, backref, deferred
 from sqlalchemy.ext.declarative import declared_attr
-from extensions import db
-
-
-class Account(db.Model):
-    __tablename__ = 'accounts'
-
-    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255))
-    email = db.Column(db.String(255))
-    created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow) 
-    facebook_id = db.Column(db.BigInteger)
-
-    points = relationship('Point', cascade="delete")
-
-    def __init__(self, facebook_id, name, email):
-        self.name = name
-        self.email = email
-        self.facebook_id = facebook_id
-
-    def __repr__(self):
-        return '<Account email=(%s)>' % self.email
-
-    def to_dict(self):
-        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
+from trace.extensions import db
 
 class Point(db.Model):
     __tablename__ = 'points'
@@ -42,10 +19,10 @@ class Point(db.Model):
 
     # account = relationship('Account')
 
-    def __init__(self, uuid, longitude, latitude, account_id, **props):
-        self.id = uuid
-        self.lat = longitude
-        self.lng = latitude
+    def __init__(self, id, lng, lat, account_id, **props):
+        self.id = id
+        self.lat = lng
+        self.lng = lat
         self.account_id = account_id
         
         created_at = props.get('timestamp')
@@ -60,16 +37,17 @@ class Point(db.Model):
         return '<Point lat=(%s) lng=(%s)>' % (self.lat, self.lng)
 
     def to_dict(self):
-        return { c.name: getattr(self, c.name) for c in self.__table__.columns if self.c }
+        return { c.name: getattr(self, c.name) for c in self.__table__.columns }
 
     def to_sparse_dict(self):
         # only creates dict from undeferrable columns
         # columns are deferrable to decrease query time
-        return {'lat': self.lat, 'lng': self.lng, 'created_at': self.created_at}
+        # 'created_at': self.created_at
+        return {'lat': self.lat, 'lng': self.lng}
 
-    @declared_attr
-    def account_id(self):
-        return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
+    # @declared_attr
+    # def account_id(self):
+    #     return db.Column(db.BigInteger, db.ForeignKey('accounts.id'))
 
 
 
