@@ -8,11 +8,10 @@ from sqlalchemy.exc import (
 )
 
 from trace.services.places import PlacesService
-from extensions import db
+from trace.extensions import db
 import sys
-from werkzeug.contrib.cache import SimpleCache
-from utils import nocache
-from helpers import fb_auth
+from trace.utils import nocache
+from trace.helpers import fb_auth
 from trace.lib.dbscan import DBScanner
 from trace.models.point import Point
 from trace.models.account import Account
@@ -22,7 +21,6 @@ from flask_redis import FlaskRedis
 import json
 redis_store = FlaskRedis()
 
-# cache = SimpleCache()
 sys.path.insert(0, '/opt/python/current/app/trace')
 
 application = Flask(__name__)
