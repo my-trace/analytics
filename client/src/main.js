@@ -1,3 +1,12 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import InspectListView from './components/InspectListView';
+
+ReactDOM.render(
+  <InspectListView />,
+  document.getElementById('list')
+);
+
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -9,6 +18,8 @@ function initMap() {
   getPoints().then(renderLine);
   getPlaces().then(renderMarkers);
 }
+
+global.initMap = initMap;
 
 function renderLine(coordinates) {
   console.log(coordinates);
@@ -37,7 +48,7 @@ function renderMarkers(places) {
       position: latLng,
       map: map,
       label: String(place.num_points),
-    });  
+    });
   }
 }
 
