@@ -4,7 +4,7 @@ import InspectListView from './components/InspectListView';
 
 ReactDOM.render(
   <InspectListView />,
-  document.getElementById('list')
+  document.getElementById('inspectView')
 );
 
 var map;
