@@ -7,5 +7,4 @@ class InspectListView extends React.Component {
 		)
 	}
 }
-console.log('inspect', InspectListView)
 module.exports = InspectListView;

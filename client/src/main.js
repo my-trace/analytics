@@ -14,9 +14,8 @@ function initMap() {
     zoom: 8
   });
   console.log('staarting query wow');
-  // console.log(sample_locations.length);
-  getPoints().then(renderLine);
-  getPlaces().then(renderMarkers);
+  // getPoints().then(renderLine);
+  // getPlaces().then(renderMarkers);
 }
 
 global.initMap = initMap;
