@@ -4,8 +4,7 @@ config = ConfigParser.ConfigParser()
 config.read('trace/config/base.cfg')
 
 if os.environ['APP_SETTINGS'] == 'trace.config.Test':
-    print 'hello'
-    config.read('trace/config/test.cfg')    
+    config.read('trace/config/test.cfg')
 
 
 class DefaultConfig(object):
@@ -26,5 +25,5 @@ class Development(DefaultConfig):
 class Production(DefaultConfig):
     ENV = 'production'
     SQLALCHEMY_DATABASE_URI = os.environ['DB_URL']
-    GP_API_KEY = os.environ['GP_API_KEY']
+    GP_API_KEY = os.environ.get('GP_API_KEY')
 
