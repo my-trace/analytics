@@ -14,7 +14,7 @@ class Account(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), default=datetime.utcnow) 
     facebook_id = db.Column(db.BigInteger)
 
-    points = relationship('Point', cascade="delete")
+    # points = relationship('Point', cascade="delete")
 
     def __init__(self, facebook_id, name, email):
         self.name = name

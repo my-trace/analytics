@@ -11,3 +11,4 @@ client/data/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 .cache
+node_modules

@@ -8,21 +8,19 @@ from sqlalchemy.exc import (
 )
 
 from trace.services.places import PlacesService
-from extensions import db
+from trace.extensions import db
 import sys
-from werkzeug.contrib.cache import SimpleCache
-from utils import nocache
-from helpers import fb_auth
+from trace.utils import nocache
+from trace.helpers import fb_auth
 from trace.lib.dbscan import DBScanner
 from trace.models.point import Point
 from trace.models.account import Account
-from trace.services.points import PointsService 
+from trace.services.points import PointsService
 from trace.services.significant_points_service import SignificantPointsService
 from flask_redis import FlaskRedis
 import json
 redis_store = FlaskRedis()
 
-# cache = SimpleCache()
 sys.path.insert(0, '/opt/python/current/app/trace')
 
 application = Flask(__name__)
@@ -85,7 +83,7 @@ def places():
         points = PointsService.get_points_from_range(one_week_ago, now)
         print 'converting to signficant points'
         # significant_points = DBScanner.get_significant_points(points)
-        
+
         ## currently just gets the closest place without timestamp
         significant_points = SignificantPointsService.create_significant_points_from_points(points)
         print 'fetching places from significant location', len(significant_points)
@@ -100,10 +98,10 @@ def places():
 def root():
     return send_from_directory('./../client', 'index.html')
 
-@application.route('/js/<path:path>')
+@application.route('/build/js/<path:path>')
 @nocache
 def js(path):
-    return send_from_directory('./../client/js', path)
+    return send_from_directory('./../client/build/js', path)
 
 @application.route('/data/<path:path>')
 def data(path):

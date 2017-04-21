@@ -1,3 +1,12 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import InspectListView from './components/InspectListView';
+
+ReactDOM.render(
+  <InspectListView />,
+  document.getElementById('inspectView')
+);
+
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -5,10 +14,11 @@ function initMap() {
     zoom: 8
   });
   console.log('staarting query wow');
-  // console.log(sample_locations.length);
-  getPoints().then(renderLine);
-  getPlaces().then(renderMarkers);
+  // getPoints().then(renderLine);
+  // getPlaces().then(renderMarkers);
 }
+
+global.initMap = initMap;
 
 function renderLine(coordinates) {
   console.log(coordinates);
@@ -37,7 +47,7 @@ function renderMarkers(places) {
       position: latLng,
       map: map,
       label: String(place.num_points),
-    });  
+    });
   }
 }
 

@@ -15,8 +15,7 @@ class SignificantPoint(db.Model):
     entered = db.Column(db.DateTime(timezone=True))
     departed = db.Column(db.DateTime(timezone=True))
 
-
-    # account = relationship('Account')
+    account = relationship('Account')
 
     def __init__(self, lat, lng, entered, departed, num_points, account_id=None):
         self.lng = lng

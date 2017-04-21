@@ -2,7 +2,6 @@ import json
 import numpy as np
 from sklearn.cluster import DBSCAN
 from datetime import datetime
-import dateutil.parser
 
 class DBScanner(object):
     MIN_SAMPLES = 100
